@@ -1,0 +1,365 @@
+[gd_scene load_steps=51 format=3 uid="uid://bkw2mmvu3x5kj"]
+
+[ext_resource type="Script" path="res://Player/player.gd" id="1_lhucc"]
+[ext_resource type="Script" path="res://Player/interact_area.gd" id="2_dkpta"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="2_hml7i"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/parallel_state.gd" id="3_r67rm"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="4_g7dai"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="5_oqfem"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="6_qau8r"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/animation_tree_state.gd" id="6_tauc2"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/expression_guard.gd" id="8_dablx"]
+[ext_resource type="PackedScene" uid="uid://bcwkugn6v3oy7" path="res://addons/godot_state_charts/utilities/state_chart_debugger.tscn" id="9_k3yox"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/guard.gd" id="9_v6ebi"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/state_is_active_guard.gd" id="10_k5hxi"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/all_of_guard.gd" id="11_am34r"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/not_guard.gd" id="11_nn5lp"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/any_of_guard.gd" id="12_brwxs"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vdp4a"]
+height = 1.7
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eamkg"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_86sqt"]
+material = SubResource("StandardMaterial3D_eamkg")
+height = 1.7
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_gu6f8"]
+radius = 12.0
+
+[sub_resource type="Resource" id="Resource_dkpta"]
+script = ExtResource("8_dablx")
+expression = "on_floor == true"
+metadata/_custom_type_script = ExtResource("8_dablx")
+
+[sub_resource type="Resource" id="Resource_lfmf2"]
+script = ExtResource("10_k5hxi")
+state = NodePath("../../Jump")
+metadata/_custom_type_script = ExtResource("10_k5hxi")
+
+[sub_resource type="Resource" id="Resource_pisgm"]
+script = ExtResource("11_nn5lp")
+guard = SubResource("Resource_lfmf2")
+metadata/_custom_type_script = ExtResource("11_nn5lp")
+
+[sub_resource type="Resource" id="Resource_b1ygp"]
+script = ExtResource("8_dablx")
+expression = "on_floor == false"
+metadata/_custom_type_script = ExtResource("8_dablx")
+
+[sub_resource type="Resource" id="Resource_o28un"]
+script = ExtResource("11_am34r")
+guards = Array[ExtResource("9_v6ebi")]([SubResource("Resource_pisgm"), SubResource("Resource_b1ygp")])
+metadata/_custom_type_script = ExtResource("11_am34r")
+
+[sub_resource type="Resource" id="Resource_t1uvx"]
+script = ExtResource("8_dablx")
+expression = "speed == 0.0"
+
+[sub_resource type="Resource" id="Resource_wl2t1"]
+script = ExtResource("8_dablx")
+expression = "speed == 0.0"
+
+[sub_resource type="Resource" id="Resource_ign38"]
+script = ExtResource("10_k5hxi")
+state = NodePath("../../../SprintState/Sprinting")
+
+[sub_resource type="Resource" id="Resource_5u08d"]
+script = ExtResource("11_nn5lp")
+guard = SubResource("Resource_ign38")
+
+[sub_resource type="Resource" id="Resource_6ubh4"]
+script = ExtResource("8_dablx")
+expression = "speed < 7.0"
+
+[sub_resource type="Resource" id="Resource_q63wl"]
+script = ExtResource("12_brwxs")
+guards = Array[ExtResource("9_v6ebi")]([SubResource("Resource_5u08d"), SubResource("Resource_6ubh4")])
+
+[sub_resource type="Resource" id="Resource_5leoc"]
+script = ExtResource("10_k5hxi")
+state = NodePath("../../../SprintState/Sprinting")
+
+[sub_resource type="Resource" id="Resource_bjtb5"]
+script = ExtResource("8_dablx")
+expression = "speed > 7.0"
+
+[sub_resource type="Resource" id="Resource_w85kk"]
+script = ExtResource("11_am34r")
+guards = Array[ExtResource("9_v6ebi")]([SubResource("Resource_5leoc"), SubResource("Resource_bjtb5")])
+
+[sub_resource type="Resource" id="Resource_trc83"]
+script = ExtResource("8_dablx")
+expression = "speed == 0.0"
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_xxd0h"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ac1ks"]
+animation = &"ball"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_d7mjp"]
+animation = &"idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_72q21"]
+animation = &"normal"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_gph11"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_c82ng"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_m5782"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_3dp2f"]
+xfade_time = 0.5
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_40gxg"]
+xfade_time = 0.5
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_qpwvj"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_lkcb4"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_7js4w"]
+states/BlendTree/node = SubResource("AnimationNodeBlendTree_xxd0h")
+states/BlendTree/position = Vector2(579.093, 189.547)
+states/End/position = Vector2(579.096, 50.6707)
+states/Start/position = Vector2(220, 50.8062)
+states/ball/node = SubResource("AnimationNodeAnimation_ac1ks")
+states/ball/position = Vector2(761.263, 185.503)
+states/idle/node = SubResource("AnimationNodeAnimation_d7mjp")
+states/idle/position = Vector2(420.417, 56.9674)
+states/normal/node = SubResource("AnimationNodeAnimation_72q21")
+states/normal/position = Vector2(420.202, 189.691)
+transitions = ["idle", "End", SubResource("AnimationNodeStateMachineTransition_gph11"), "idle", "normal", SubResource("AnimationNodeStateMachineTransition_c82ng"), "Start", "idle", SubResource("AnimationNodeStateMachineTransition_m5782"), "normal", "idle", SubResource("AnimationNodeStateMachineTransition_3dp2f"), "ball", "idle", SubResource("AnimationNodeStateMachineTransition_40gxg"), "normal", "BlendTree", SubResource("AnimationNodeStateMachineTransition_qpwvj"), "BlendTree", "ball", SubResource("AnimationNodeStateMachineTransition_lkcb4")]
+graph_offset = Vector2(-120, -10)
+
+[sub_resource type="Animation" id="Animation_cmcm3"]
+resource_name = "ball"
+
+[sub_resource type="Animation" id="Animation_pjhbk"]
+resource_name = "idle"
+
+[sub_resource type="Animation" id="Animation_rmkpa"]
+resource_name = "normal"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ibksr"]
+_data = {
+&"ball": SubResource("Animation_cmcm3"),
+&"idle": SubResource("Animation_pjhbk"),
+&"normal": SubResource("Animation_rmkpa")
+}
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_lhucc")
+Friction = 14.5
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_vdp4a")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_86sqt")
+
+[node name="InteractArea" type="Area3D" parent="."]
+process_mode = 4
+script = ExtResource("2_dkpta")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractArea"]
+shape = SubResource("SphereShape3D_gu6f8")
+
+[node name="CameraMount" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 0.6, 0)
+
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="."]
+transform = Transform3D(0.957412, -0.288718, -0.00181227, 0.00175409, -0.000460221, 0.999998, -0.288718, -0.957414, 6.58069e-05, -0.297256, 0.516784, -0.375594)
+radius = 0.172472
+height = 0.0859535
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="."]
+transform = Transform3D(0.973247, 0.229761, 1.00432e-08, 0, -4.37114e-08, 1, 0.229761, -0.973247, -4.2542e-08, 0.291713, 0.516784, -0.390771)
+radius = 0.172472
+height = 0.0859535
+
+[node name="StateMachine" type="Node" parent="."]
+
+[node name="StateChart" type="Node" parent="StateMachine"]
+script = ExtResource("2_hml7i")
+
+[node name="Root" type="Node" parent="StateMachine/StateChart"]
+script = ExtResource("3_r67rm")
+
+[node name="MovementState" type="Node" parent="StateMachine/StateChart/Root"]
+script = ExtResource("3_r67rm")
+
+[node name="VerticalState" type="Node" parent="StateMachine/StateChart/Root/MovementState"]
+script = ExtResource("4_g7dai")
+initial_state = NodePath("Floor")
+
+[node name="To Jump" type="Node" parent="StateMachine/StateChart/Root/MovementState/VerticalState"]
+script = ExtResource("6_qau8r")
+to = NodePath("../Jump")
+event = &"jump"
+delay_in_seconds = "0.0"
+
+[node name="To Floor" type="Node" parent="StateMachine/StateChart/Root/MovementState/VerticalState"]
+script = ExtResource("6_qau8r")
+to = NodePath("../Floor")
+event = &"on_floor"
+delay_in_seconds = "0.0"
+
+[node name="Jump" type="Node" parent="StateMachine/StateChart/Root/MovementState/VerticalState"]
+script = ExtResource("5_oqfem")
+
+[node name="To Falling" type="Node" parent="StateMachine/StateChart/Root/MovementState/VerticalState/Jump"]
+script = ExtResource("6_qau8r")
+to = NodePath("../../Falling")
+delay_in_seconds = "0.4"
+
+[node name="Falling" type="Node" parent="StateMachine/StateChart/Root/MovementState/VerticalState"]
+script = ExtResource("5_oqfem")
+
+[node name="To Floor" type="Node" parent="StateMachine/StateChart/Root/MovementState/VerticalState/Falling"]
+script = ExtResource("6_qau8r")
+to = NodePath("../../Floor")
+guard = SubResource("Resource_dkpta")
+delay_in_seconds = "0.0"
+
+[node name="Floor" type="Node" parent="StateMachine/StateChart/Root/MovementState/VerticalState"]
+script = ExtResource("5_oqfem")
+
+[node name="To Falling" type="Node" parent="StateMachine/StateChart/Root/MovementState/VerticalState/Floor"]
+script = ExtResource("6_qau8r")
+to = NodePath("../../Falling")
+guard = SubResource("Resource_o28un")
+delay_in_seconds = "0.2"
+
+[node name="HorizontalState" type="Node" parent="StateMachine/StateChart/Root/MovementState"]
+script = ExtResource("4_g7dai")
+initial_state = NodePath("Deacceleration")
+
+[node name="Idle" type="Node" parent="StateMachine/StateChart/Root/MovementState/HorizontalState"]
+script = ExtResource("5_oqfem")
+
+[node name="To Acceleration" type="Node" parent="StateMachine/StateChart/Root/MovementState/HorizontalState/Idle"]
+script = ExtResource("6_qau8r")
+to = NodePath("../../Acceleration")
+event = &"accelerate"
+delay_in_seconds = "0.0"
+
+[node name="Acceleration" type="Node" parent="StateMachine/StateChart/Root/MovementState/HorizontalState"]
+script = ExtResource("5_oqfem")
+
+[node name="To Deacceleration" type="Node" parent="StateMachine/StateChart/Root/MovementState/HorizontalState/Acceleration"]
+script = ExtResource("6_qau8r")
+to = NodePath("../../Deacceleration")
+event = &"deaccelerate"
+delay_in_seconds = "0.0"
+
+[node name="Deacceleration" type="Node" parent="StateMachine/StateChart/Root/MovementState/HorizontalState"]
+script = ExtResource("5_oqfem")
+
+[node name="To Idle" type="Node" parent="StateMachine/StateChart/Root/MovementState/HorizontalState/Deacceleration"]
+script = ExtResource("6_qau8r")
+to = NodePath("../../Idle")
+guard = SubResource("Resource_t1uvx")
+delay_in_seconds = "0.0"
+
+[node name="To Acceleration" type="Node" parent="StateMachine/StateChart/Root/MovementState/HorizontalState/Deacceleration"]
+script = ExtResource("6_qau8r")
+to = NodePath("../../Acceleration")
+event = &"accelerate"
+delay_in_seconds = "0.0"
+
+[node name="AnimationState" type="Node" parent="StateMachine/StateChart/Root"]
+script = ExtResource("4_g7dai")
+initial_state = NodePath("Idle")
+
+[node name="Ball" type="Node" parent="StateMachine/StateChart/Root/AnimationState"]
+script = ExtResource("6_tauc2")
+animation_tree = NodePath("../../../../../AnimationTree")
+state_name = &"ball"
+
+[node name="To Idle" type="Node" parent="StateMachine/StateChart/Root/AnimationState/Ball"]
+script = ExtResource("6_qau8r")
+to = NodePath("../../Idle")
+guard = SubResource("Resource_wl2t1")
+delay_in_seconds = "0.0"
+
+[node name="To Normal" type="Node" parent="StateMachine/StateChart/Root/AnimationState/Ball"]
+script = ExtResource("6_qau8r")
+to = NodePath("../../Normal")
+guard = SubResource("Resource_q63wl")
+delay_in_seconds = "0.0"
+
+[node name="Idle" type="Node" parent="StateMachine/StateChart/Root/AnimationState"]
+script = ExtResource("6_tauc2")
+animation_tree = NodePath("../../../../../AnimationTree")
+state_name = &"idle"
+
+[node name="To Normal" type="Node" parent="StateMachine/StateChart/Root/AnimationState/Idle"]
+script = ExtResource("6_qau8r")
+to = NodePath("../../Normal")
+event = &"accelerate"
+delay_in_seconds = "0.0"
+
+[node name="Normal" type="Node" parent="StateMachine/StateChart/Root/AnimationState"]
+script = ExtResource("6_tauc2")
+animation_tree = NodePath("../../../../../AnimationTree")
+state_name = &"normal"
+
+[node name="To Ball" type="Node" parent="StateMachine/StateChart/Root/AnimationState/Normal"]
+script = ExtResource("6_qau8r")
+to = NodePath("../../Ball")
+guard = SubResource("Resource_w85kk")
+delay_in_seconds = "0.0"
+
+[node name="To Idle" type="Node" parent="StateMachine/StateChart/Root/AnimationState/Normal"]
+script = ExtResource("6_qau8r")
+to = NodePath("../../Idle")
+guard = SubResource("Resource_trc83")
+delay_in_seconds = "0.0"
+
+[node name="SprintState" type="Node" parent="StateMachine/StateChart/Root"]
+script = ExtResource("4_g7dai")
+initial_state = NodePath("Normal")
+
+[node name="Normal" type="Node" parent="StateMachine/StateChart/Root/SprintState"]
+script = ExtResource("5_oqfem")
+
+[node name="To Sprint" type="Node" parent="StateMachine/StateChart/Root/SprintState/Normal"]
+script = ExtResource("6_qau8r")
+to = NodePath("../../Sprinting")
+event = &"sprint"
+delay_in_seconds = "0.0"
+
+[node name="Sprinting" type="Node" parent="StateMachine/StateChart/Root/SprintState"]
+script = ExtResource("5_oqfem")
+
+[node name="To Normal" type="Node" parent="StateMachine/StateChart/Root/SprintState/Sprinting"]
+script = ExtResource("6_qau8r")
+to = NodePath("../../Normal")
+event = &"stop_sprint"
+delay_in_seconds = "0.0"
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource("AnimationNodeStateMachine_7js4w")
+anim_player = NodePath("../AnimationPlayer")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_ibksr")
+}
+
+[node name="StateChartDebugger" parent="." instance=ExtResource("9_k3yox")]
+offset_right = -1181.0
+offset_bottom = -575.0
+initial_node_to_watch = NodePath("../StateMachine/StateChart")
+
+[connection signal="area_entered" from="InteractArea" to="InteractArea" method="_on_area_entered"]
+[connection signal="state_entered" from="StateMachine/StateChart/Root/SprintState/Sprinting" to="." method="_on_sprinting_state_entered"]
+[connection signal="state_exited" from="StateMachine/StateChart/Root/SprintState/Sprinting" to="." method="_on_sprinting_state_exited"]

@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=3 uid="uid://myt2fwnm70k5"]
+
+[ext_resource type="Script" path="res://Player/player_camera.gd" id="1_0npno"]
+[ext_resource type="Script" path="res://Player/interact_ray.gd" id="1_ehrhw"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_0npno"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gi6x7"]
+radius = 2.0
+height = 12.0
+
+[node name="PlayerCamera" type="Node3D"]
+script = ExtResource("1_0npno")
+
+[node name="Pivot" type="Node3D" parent="."]
+
+[node name="SpringArm3D" type="SpringArm3D" parent="Pivot"]
+collision_mask = 3
+shape = SubResource("SphereShape3D_0npno")
+spring_length = 3.0
+margin = 0.2
+
+[node name="Camera3D" type="Camera3D" parent="Pivot/SpringArm3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
+
+[node name="InteractRay" type="ShapeCast3D" parent="Pivot/SpringArm3D/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, -5)
+shape = SubResource("CapsuleShape3D_gi6x7")
+collide_with_areas = true
+collide_with_bodies = false
+script = ExtResource("1_ehrhw")
+
+[connection signal="found_interactable" from="Pivot/SpringArm3D/Camera3D/InteractRay" to="." method="_on_interact_ray_found_interactable"]
